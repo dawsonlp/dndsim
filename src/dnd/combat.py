@@ -1,4 +1,4 @@
-from dnd.util import HumanCharacter, HalfOrcCharacter, MediumLongsword, gen_character
+from dnd.util import HumanCharacter, HalfOrcCharacter, MediumLongsword35, gen_character
 
 def attack(attacker, defender):
     attack = attacker.get_attack(defender)
@@ -6,10 +6,10 @@ def attack(attacker, defender):
 
 if __name__=="__main__":
     ch1 = HumanCharacter(gen_character(), "dwarvish")
-    sword1 = MediumLongsword()
+    sword1 = MediumLongsword35()
     ch1.add_weapon_to_inventory(sword1)
     ch2 = HalfOrcCharacter(gen_character())
-    sword2 = MediumLongsword()
+    sword2 = MediumLongsword35()
     ch2.add_weapon_to_inventory(sword2)
     print(ch1, "\n", ch2, "\n*******************************\n")
     while ch1.is_conscious() and ch2.is_conscious():
@@ -24,7 +24,7 @@ if __name__=="__main__":
             a2 = sword2.get_attack(ch2, ch1)
             if a2:
                 ch1.defend_against_attack(a2)
-
+            print(ch1.effective_hit_points(), ch2.effective_hit_points())
     if ch1.is_conscious():
         print ("Winner is ch1, they have remaining hit points = ", ch1.effective_hit_points())
     elif ch2.is_conscious():

@@ -3,6 +3,10 @@
 
  """
 
+from dnd.util import *
+from random import *
+
+
 class BattleDataGeneration:
     """Choosing an ideal weapon or attack can depend on a number of factors:
      dexterity score vs strength score
@@ -21,9 +25,43 @@ class BattleDataGeneration:
     on low level characters."""
 
     def __init__(self):
-        pass
+        self.weapons = [MediumLongsword35(), WarHammer35(), Falchion35(),
+                        BastardSword35(), Scimitar35()]
 
     def generate_random_character(self):
+        base = gen_character()
+        chartype = randint(0,1)
+        if chartype == 0:
+            res = HumanCharacter(base, "Dwarvish")
+        elif chartype == 1:
+            res = HalfOrcCharacter(base)
+        weapon = choice(self.weapons)
+        res.add_weapon_to_inventory(weapon)
+        return res
+
+    def determine_winner(self, char1, char2, initiative_order):
+        if initiative_order == 1:
+            ch1 = char1
+            ch2 = char2
+        elif initiative_order == 2:
+            ch1 = char2
+            ch2 = char1
+        else:
+            raise Exception("Bad initiative order")
+        while ch1.is_conscious() and ch2.is_conscious():
+            if ch1.is_conscious():
+                a1 = ch1.weapons[0].get_attack(ch1, ch2)
+                if a1:
+                    ch2.defend_against_attack(a1)
+            if ch2.is_conscious():
+                a2 = ch2.weapons[0].get_attack(ch2, ch1)
+                if a2:
+                    ch1.defend_against_attack(a2)
+        if char1.is_conscious():
+            return (1, char1.effective_hit_points())
+        else:
+            return (2, char2.effective_hit_points())
+
 
     def battle_data_1(self):
         """generate array with attributes:
@@ -32,3 +70,37 @@ class BattleDataGeneration:
         character 2: strength, dexterity
         """
         ch1 = self.generate_random_character()
+        stats1 = ch1.get_combat_stats()
+        ch2 = self.generate_random_character()
+        stats2 = ch2.get_combat_stats()
+        initiative_1 = 0
+        initiative_2 = 0
+        while initiative_1 == initiative_2:
+            initiative_1 = rollndx(1,20) + ch1.initiative_bonus()
+            initiative_2 = rollndx(1,20) + ch2.initiative_bonus()
+        if initiative_1 > initiative_2:
+            initiative_order = 1
+        else:
+            initiative_order = 2
+        res = self.determine_winner(ch1, ch2, initiative_order)
+        ch1_won = res[0] == 1
+        if ch1_won:
+            ch1_hp = res[1]
+            ch2_hp = 0
+            ch2_won = False
+        else:
+            ch2_won = True
+            ch1_hp = 0
+            ch2_hp = res[1]
+
+        record = stats1 + [ch1_won, ch1_hp] + stats2 + [ch2_won, ch2_hp]
+        return record
+
+    def run_battle_data_1(self, count):
+        for btl in range(count):
+            print (self.battle_data_1())
+        print (Character.get_combat_stat_columns() + ["char1_won", "char1_hp_left"])
+
+if __name__ == "__main__":
+    datagen = BattleDataGeneration()
+    datagen.run_battle_data_1(1000)
