@@ -5,7 +5,7 @@
 
 from dnd.util import *
 from random import *
-
+from itertools import chain
 
 class BattleDataGeneration:
     """Choosing an ideal weapon or attack can depend on a number of factors:
@@ -98,9 +98,17 @@ class BattleDataGeneration:
 
     def run_battle_data_1(self, count):
         for btl in range(count):
-            print (self.battle_data_1())
-        print (Character.get_combat_stat_columns() + ["char1_won", "char1_hp_left"])
+            yield self.battle_data_1()
+    
+    def show_headings(self):
+        h1 = ("char1_" + h for h in Character.get_combat_stat_columns() + ("won", "hp_left"))
+        h2 = ("char2_" + h for h in Character.get_combat_stat_columns() + ("won", "hp_left"))
+        return tuple(chain(h1,h2))
+        
+
 
 if __name__ == "__main__":
     datagen = BattleDataGeneration()
-    datagen.run_battle_data_1(1000)
+    print(",".join(datagen.show_headings()))
+    for rec in datagen.run_battle_data_1(10):
+        print(",".join(str(r) for r in rec))

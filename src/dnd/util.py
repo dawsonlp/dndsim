@@ -213,11 +213,11 @@ class Character(object):
 
     @staticmethod
     def get_combat_stat_columns():
-        return ["race", "base_strength", "base_dexterity", "base_constitution",
+        return ("race", "base_strength", "base_dexterity", "base_constitution",
                 "base_intelligence", "base_wisdom", "base_charisma",
                 "strength", "dexterity", "constitution",
                 "intelligence", "wisdom", "charisma","weapon_type", "critical", "critical_damage_multiplier",
-                "initiative_bonus", "hit_points", "effective_hit_points", "effective_armor_class"]
+                "initiative_bonus", "hit_points", "effective_hit_points", "effective_armor_class")
     
     def get_combat_stats(self):
         return [self.race, self.base_character.strength, self.base_character.dexterity, self.base_character.constitution,
