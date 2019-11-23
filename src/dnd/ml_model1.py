@@ -49,11 +49,9 @@ if __name__ == "__main__":
     ])
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-
     model.fit(x_train.to_numpy(), (y_train[["char1_won"]]).to_numpy(), epochs=5)
 
     model.evaluate(x_test.to_numpy(), (y_test[["char1_won"]]).to_numpy(), verbose=2)
-
 
     """
     Problem:- when I run this model, I end up getting accuracy of very close to 50%
@@ -64,7 +62,8 @@ if __name__ == "__main__":
     1. Need to have normalization numbers available to apply to test dataset and to any items I come up with to test
     2. Need to generate a real estimate of probability to compare results with - the test may be broken (?)
     3. How to run this effectively - probably need to do in jupyter? or ipython, how could i run in pycharm interactively?
-    
+       - how to test
+       - how to generate particular testcase and see how it is encoded.
     Run training
     run simulation on a particular character pair and generate a probability estimate 
     Compare to the output of the output unit.
