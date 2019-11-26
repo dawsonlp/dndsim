@@ -189,7 +189,7 @@ def modifier(score):
 class Character(object):
 
 
-    def __init__(self, base_character, strength, dexterity, constitution, intelligence, wisdom, charisma, hit_points, size, additional_languages, race):
+    def __init__(self, base_character, strength, dexterity, constitution, intelligence, wisdom, charisma, max_hit_points, size, additional_languages, race):
         self.strength = strength
         self.dexterity = dexterity
         self.constitution = constitution
@@ -201,7 +201,8 @@ class Character(object):
         self.equipment=[]
         self.weapons = []
         self.armor = []
-        self.hit_points = hit_points
+        self.max_hit_points = max_hit_points
+        self.hit_points = self.max_hit_points #start off full
         self.size= size
         self.languages = ["common"] + additional_languages
         self.base_initiative_bonus = 0
@@ -217,14 +218,14 @@ class Character(object):
                 "base_intelligence", "base_wisdom", "base_charisma",
                 "strength", "dexterity", "constitution",
                 "intelligence", "wisdom", "charisma","weapon_type", "critical", "critical_damage_multiplier",
-                "initiative_bonus", "hit_points", "effective_hit_points", "effective_armor_class")
+                "initiative_bonus", "hit_points", "max_hit_points", "effective_hit_points", "effective_armor_class")
     
     def get_combat_stats(self):
         return [self.race, self.base_character.strength, self.base_character.dexterity, self.base_character.constitution,
                 self.base_character.intelligence, self.base_character.wisdom, self.base_character.charisma,
-                self.strength, self.dexterity,self.constitution, self.intelligence, self.wisdom, self.charisma,
+                self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma,
                 self.weapons[0].weapon_type, self.weapons[0].critical, self.weapons[0].critical_damage_multiplier,
-                self.initiative_bonus(), self.hit_points, self.effective_hit_points(), self.effective_armor_class()]
+                self.initiative_bonus(), self.hit_points, self.max_hit_points, self.effective_hit_points(), self.effective_armor_class()]
 
     def effective_armor_class(self):
         """10 + armor bonus + shield bonus + Dexterity modifier + size modifier"""
@@ -311,7 +312,7 @@ class HumanCharacter(Character):
     def __init__(self, base_character, extra_language):
         super().__init__(base_character, base_character.strength + 1, base_character.dexterity + 1, base_character.constitution + 1,
                          base_character.intelligence + 1, base_character.wisdom + 1, base_character.charisma + 1,
-                         hit_points = 10,
+                         max_hit_points= 40,
                          size="medium", additional_languages= [extra_language], race = "Human")
         #How do I get to modify the strength but pass through to the inherited constructor
 
@@ -327,7 +328,7 @@ class HalfOrcCharacter(Character):
     def __init__(self, base_character):
         super().__init__(base_character, base_character.strength + 2, base_character.dexterity, base_character.constitution + 1,
                          base_character.intelligence, base_character.wisdom, base_character.charisma,
-                         hit_points = 10,
+                         max_hit_points= 40,
                          size="medium", additional_languages= ['orcish'], race = "HalfOrc")
         self.languages = ["common", "orcish"]
         self.darkvision = 60
