@@ -19,7 +19,7 @@ def get_machine_learning_optimized_df(srcdf, normalization_coefficients = None):
     yvars = srcdf[["char1_won", "char2_won", "char1_hp_left", "char2_hp_left"]]
     xdf = srcdf.drop(columns=["char1_won", "char2_won", "char1_hp_left", "char2_hp_left",
                               "char1_race", "char2_race",
-                              "char1_weapon_type", "char2_weapon_type",
+                              "char1_weapon_type", "char2_weapon_type", "char1_strength"
                               'char1_dexterity', 'char1_constitution', 'char1_intelligence',
                               'char1_wisdom', 'char1_charisma', 'char1_critical',
                               'char1_critical_damage_multiplier',

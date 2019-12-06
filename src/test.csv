@@ -1,0 +1,11 @@
+char1_race,char1_base_strength,char1_base_dexterity,char1_base_constitution,char1_base_intelligence,char1_base_wisdom,char1_base_charisma,char1_strength,char1_dexterity,char1_constitution,char1_intelligence,char1_wisdom,char1_charisma,char1_weapon_type,char1_critical,char1_critical_damage_multiplier,char1_initiative_bonus,char1_hit_points,char1_effective_hit_points,char1_effective_armor_class,char1_won,char1_hp_left,char2_race,char2_base_strength,char2_base_dexterity,char2_base_constitution,char2_base_intelligence,char2_base_wisdom,char2_base_charisma,char2_strength,char2_dexterity,char2_constitution,char2_intelligence,char2_wisdom,char2_charisma,char2_weapon_type,char2_critical,char2_critical_damage_multiplier,char2_initiative_bonus,char2_hit_points,char2_effective_hit_points,char2_effective_armor_class,char2_won,char2_hp_left
+Human,11,8,13,7,13,10,12,9,14,8,14,11,Longsword,19,2,-1,10,12,9,False,0,HalfOrc,12,15,11,11,12,7,14,15,12,11,12,7,BastardSword,19,2,2,10,11,12,True,5
+HalfOrc,13,12,17,9,9,7,15,12,18,9,9,7,Scimitar,18,2,1,10,14,11,True,6,HalfOrc,16,10,9,12,12,15,18,10,10,12,12,15,Falchion,18,2,0,10,10,10,False,0
+HalfOrc,7,10,17,14,16,15,9,10,18,14,16,15,BastardSword,19,2,0,10,14,10,True,5,Human,8,7,14,7,7,14,9,8,15,8,8,15,Scimitar,18,2,-1,10,12,9,False,0
+Human,6,16,13,11,15,9,7,17,14,12,16,10,Warhammer,20,3,3,10,12,13,True,2,Human,15,11,12,14,10,10,16,12,13,15,11,11,Warhammer,20,3,1,10,11,11,False,0
+Human,15,13,16,8,12,14,16,14,17,9,13,15,Falchion,18,2,2,10,13,12,False,0,HalfOrc,13,13,12,15,10,14,15,13,13,15,10,14,Falchion,18,2,1,10,11,11,True,3
+HalfOrc,9,14,13,12,14,11,11,14,14,12,14,11,Longsword,19,2,2,10,12,12,False,0,HalfOrc,18,16,8,17,10,13,20,16,9,17,10,13,Longsword,19,2,3,10,9,13,True,9
+Human,10,15,14,10,15,13,11,16,15,11,16,14,Scimitar,18,2,3,10,12,13,True,4,Human,6,16,12,10,13,11,7,17,13,11,14,12,Warhammer,20,3,3,10,11,13,False,0
+Human,5,11,14,17,10,7,6,12,15,18,11,8,Falchion,18,2,1,10,12,11,False,0,HalfOrc,14,9,17,14,12,12,16,9,18,14,12,12,Falchion,18,2,-1,10,14,9,True,7
+HalfOrc,10,15,12,14,13,14,12,15,13,14,13,14,Falchion,18,2,2,10,11,12,True,4,Human,10,12,14,14,15,12,11,13,15,15,16,13,Scimitar,18,2,1,10,12,11,False,0
+HalfOrc,10,13,4,14,10,16,12,13,5,14,10,16,Longsword,19,2,1,10,7,11,False,0,HalfOrc,12,13,17,14,7,17,14,13,18,14,7,17,BastardSword,19,2,1,10,14,11,True,5
