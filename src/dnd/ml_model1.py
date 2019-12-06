@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
 
-import tensorflow as tf
 import pandas as pd
-from  dnd.analytics_source import BattleDataGeneration
-from itertools import chain
+import tensorflow as tf
+
+from dnd.analytics_source import BattleDataGeneration
+
 
 def get_normalization_coefficents(srcdf):
     """Returns a tuple of dataframes containing the min and max in positions 0 and 1"""
-    res = srcdf.min(), srcdf.max()
-    return res
+    return srcdf.min(), srcdf.max()
 
-def get_machine_learning_optimized_df(srcdf, normalization_coefficients = None):
-    #Need also to know what the divisors are for the items
-    r1 = pd.get_dummies(srcdf['char1_race'], prefix = "char1")
-    r2 = pd.get_dummies(srcdf["char2_race"], prefix = "char2")
-    w1 = pd.get_dummies(srcdf['char1_weapon_type'], prefix = "char1")
-    w2 = pd.get_dummies(srcdf["char2_weapon_type"], prefix = "char2")
+
+def get_simple_vars(srcdf, normalization_coefficients):
+    xvars = srcdf[["char1_strength", "char2_strength"]]
+
+
+def get_machine_learning_optimized_df(srcdf, normalization_coefficients=None):
+    # Need also to know what the divisors are for the items
+    r1 = pd.get_dummies(srcdf['char1_race'], prefix="char1")
+    r2 = pd.get_dummies(srcdf["char2_race"], prefix="char2")
+    w1 = pd.get_dummies(srcdf['char1_weapon_type'], prefix="char1")
+    w2 = pd.get_dummies(srcdf["char2_weapon_type"], prefix="char2")
     yvars = srcdf[["char1_won", "char2_won", "char1_hp_left", "char2_hp_left"]]
     xdf = srcdf.drop(columns=["char1_won", "char2_won", "char1_hp_left", "char2_hp_left",
                               "char1_race", "char2_race",
-                              "char1_weapon_type", "char2_weapon_type",
+                              "char1_weapon_type", "char2_weapon_type", "char1_strength",
                               'char1_dexterity', 'char1_constitution', 'char1_intelligence',
                               'char1_wisdom', 'char1_charisma', 'char1_critical',
                               'char1_critical_damage_multiplier',
@@ -30,8 +35,12 @@ def get_machine_learning_optimized_df(srcdf, normalization_coefficients = None):
 
     if normalization_coefficients is None:
         normalization_coefficients = get_normalization_coefficents(xdf)
+        print("got new normalization: ", normalization_coefficients)
+    else:
+        print("using old normalization coefficents: ", normalization_coefficients)
     (min, max) = normalization_coefficients
     xdfnorm = (xdf-min)/(max-min)
+    print(xdfnorm)
     xvars = pd.concat([r1, r2, w1, w2, xdfnorm], axis = 1)
     return xvars, yvars, normalization_coefficients
 
@@ -42,8 +51,10 @@ def get_data(training_set_size = 100000, test_set_size = 10000):
     df = pd.DataFrame(data=dta, columns=cols)
     dfx, dfy, norm = get_machine_learning_optimized_df(df)
     testdata = gen.run_battle_data_1(test_set_size)
-    testdfx, testdfy, norm = get_machine_learning_optimized_df(pd.DataFrame(data = testdata, columns=cols), norm)
-    return (dfx, dfy), (testdfx, testdfy), norm
+    testdfx, testdfy, norm = get_machine_learning_optimized_df(pd.DataFrame(data=testdata, columns=cols), norm)
+    cols_to_use = ["char1_base_strength", "char1_base_constitution", "char1_base_dexterity", "char2_base_dexterity",
+                   "char2_base_constitution", "char2_base_strength"]
+    return (dfx[cols_to_use], dfy), (testdfx[cols_to_use], testdfy), norm
 
 def get_single_example():
     pass
@@ -55,15 +66,16 @@ def show_example(ex):
     pass
 
 
+def run_full_model():
+    pass
 
 if __name__ == "__main__":
     (x_train, y_train), (x_test, y_test), normparams = get_data(100000,10000)
 
     print(x_train.describe())
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Dense(1000, activation='relu'),
-        tf.keras.layers.Dense(400, activation='relu'),
-        tf.keras.layers.Dense(40, activation='relu'),
+        tf.keras.layers.Dense(5, activation='relu'),
+
         tf.keras.layers.Dense(1, activation='sigmoid')
     ])
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -75,6 +87,14 @@ if __name__ == "__main__":
     """
     Problem:- when I run this model, I end up getting accuracy of very close to 50%
     This is as good as a coin toss, and not what I was expecting!
+    ---It's possible that the loss being nan is the problem...: It was :-)
+    
+        -> choosing only some columns seems to help - nan problem gone, approx 75% accuracy with 40 hitpoints:
+        if this is because of the 'going first' bonus, then the initiative would help... so would increasing the
+        hitpoints
+        -> 75% accuracy is probably not bad, since they are random trials, if it's guessing right 
+        75% of the time, it's easy to imagine that the random chance of a loss are affecting the measured prediction
+        
     
     I think I need to get the normalization eqn out so I can see how a particular case runs
     
@@ -103,4 +123,4 @@ show model : to write -
 show output from one test case - really final weight
 run test case manually running a few thousand trials to generate an estimate of the probability of winning.
 
-    """
+"""
