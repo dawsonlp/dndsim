@@ -35,6 +35,7 @@ class BattleDataGeneration:
             res = HumanCharacter(base, "Dwarvish")
         elif chartype == 1:
             res = HalfOrcCharacter(base)
+        set_max_hitpoints(res, randint(20,60))
         weapon = choice(self.weapons)
         res.add_weapon_to_inventory(weapon)
         return res

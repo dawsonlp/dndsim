@@ -26,21 +26,17 @@ def get_machine_learning_optimized_df(srcdf, normalization_coefficients=None):
                               "char1_race", "char2_race",
                               "char1_weapon_type", "char2_weapon_type", "char1_strength",
                               'char1_dexterity', 'char1_constitution', 'char1_intelligence',
-                              'char1_wisdom', 'char1_charisma', 'char1_critical',
-                              'char1_critical_damage_multiplier',
+                              'char1_wisdom', 'char1_charisma', 
                               'char2_strength', 'char2_dexterity', 'char2_constitution',
-                              'char2_intelligence', 'char2_wisdom', 'char2_charisma',
-                              'char2_critical', 'char2_critical_damage_multiplier'
+                              'char2_intelligence', 'char2_wisdom', 'char2_charisma'
                               ])
 
     if normalization_coefficients is None:
         normalization_coefficients = get_normalization_coefficents(xdf)
-        print("got new normalization: ", normalization_coefficients)
     else:
-        print("using old normalization coefficents: ", normalization_coefficients)
+        pass
     (min, max) = normalization_coefficients
     xdfnorm = (xdf-min)/(max-min)
-    print(xdfnorm)
     xvars = pd.concat([r1, r2, w1, w2, xdfnorm], axis = 1)
     return xvars, yvars, normalization_coefficients
 
@@ -54,7 +50,8 @@ def get_data(training_set_size = 100000, test_set_size = 10000):
     testdfx, testdfy, norm = get_machine_learning_optimized_df(pd.DataFrame(data=testdata, columns=cols), norm)
     cols_to_use = ["char1_base_strength", "char1_base_constitution", "char1_base_dexterity", "char2_base_dexterity",
                    "char2_base_constitution", "char2_base_strength"]
-    return (dfx[cols_to_use], dfy), (testdfx[cols_to_use], testdfy), norm
+    #return (dfx[cols_to_use], dfy), (testdfx[cols_to_use], testdfy), norm
+    return (dfx, dfy), (testdfx, testdfy), norm
 
 def get_single_example():
     pass

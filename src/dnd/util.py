@@ -185,7 +185,12 @@ def rollndx(count=1, sides=6, remove_lowest=False):
 def modifier(score):
     return floor(score/2) - 5  #Note round doesn't work in python3 - because it uses bankers rounding
 
-
+def set_max_hitpoints(character, new_max, adjust_current_hitpoints = True):
+    diff = new_max - character.max_hit_points
+    character.max_hit_points = new_max
+    if adjust_current_hitpoints:
+        character.hit_points = character.hit_points + diff
+    
 class Character(object):
 
 
@@ -276,7 +281,7 @@ Effective hit points: {hitpoints}
         return sum(dmg for attack_type, dmg in damage)
 
     def base_attack_bonus(self):
-        #Todo - implement this
+        #Todo - implement this properly
         return 0
 
     def defend_against_attack(self, attack):
@@ -348,6 +353,14 @@ def gen_character():
     return munch.Munch(scores)
 
 
+#OK create a function to check a two characters against each other - 
+#I want to be able to take two characters and tell how what the likelihood that each will win is
+
+def probability_of_win(char1, char2, model):
+    #first make a dataset with full set of columns in it
+    dataset = ()
+
+
 if __name__=="__main__":
 
     ch1 = gen_character()
@@ -355,4 +368,5 @@ if __name__=="__main__":
     print( ch1 )
     print(human1)
 
+    
 
