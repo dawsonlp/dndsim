@@ -5,6 +5,11 @@ import tensorflow as tf
 
 from dnd.analytics_source import BattleDataGeneration
 
+def get_dataframe_for_prediction(ch1, ch2, normalization_coefficents):
+    stats1 = ch1.get_combat_stats()
+    stats2 = ch2.get_combat_stats()
+    res = stats1 + stats2
+    return res
 
 def get_normalization_coefficents(srcdf):
     """Returns a tuple of dataframes containing the min and max in positions 0 and 1"""
@@ -40,18 +45,13 @@ def get_machine_learning_optimized_df(srcdf, normalization_coefficients=None):
     xvars = pd.concat([r1, r2, w1, w2, xdfnorm], axis = 1)
     return xvars, yvars, normalization_coefficients
 
-def get_data(training_set_size = 100000, test_set_size = 10000):
+def get_data(set_size = 100000, normalization_coefficients = None):
     gen = BattleDataGeneration()
     cols = gen.show_headings()
-    dta = gen.run_battle_data_1(training_set_size)
+    dta = gen.run_battle_data_1(set_size)
     df = pd.DataFrame(data=dta, columns=cols)
-    dfx, dfy, norm = get_machine_learning_optimized_df(df)
-    testdata = gen.run_battle_data_1(test_set_size)
-    testdfx, testdfy, norm = get_machine_learning_optimized_df(pd.DataFrame(data=testdata, columns=cols), norm)
-    cols_to_use = ["char1_base_strength", "char1_base_constitution", "char1_base_dexterity", "char2_base_dexterity",
-                   "char2_base_constitution", "char2_base_strength"]
-    #return (dfx[cols_to_use], dfy), (testdfx[cols_to_use], testdfy), norm
-    return (dfx, dfy), (testdfx, testdfy), norm
+    dfx, dfy, norm = get_machine_learning_optimized_df(df, normalization_coefficients)
+    return dfx, dfy, norm
 
 def get_single_example():
     pass
@@ -67,8 +67,8 @@ def run_full_model():
     pass
 
 if __name__ == "__main__":
-    (x_train, y_train), (x_test, y_test), normparams = get_data(100000,10000)
-
+    x_train, y_train, normparams  = get_data(100000)
+    x_test, y_test, normparams = get_data(10000, normparams)
     print(x_train.describe())
     model = tf.keras.models.Sequential([
         tf.keras.layers.Dense(5, activation='relu'),

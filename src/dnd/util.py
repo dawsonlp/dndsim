@@ -352,6 +352,11 @@ def gen_character():
                       'intelligence': scores[3], 'wisdom': scores[4], 'charisma': scores[5]}
     return munch.Munch(scores)
 
+def gen_fixed_character(strength, dexterity, constitution, intelligence, wisdom, charisma):
+    scores = {'strength': strength, 'dexterity': dexterity, 'constitution': constitution,
+                      'intelligence': intelligence, 'wisdom': wisdom, 'charisma': charisma}
+    return munch.Munch(scores)
+
 
 #OK create a function to check a two characters against each other - 
 #I want to be able to take two characters and tell how what the likelihood that each will win is

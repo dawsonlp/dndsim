@@ -7,6 +7,13 @@ from dnd.util import *
 from random import *
 from itertools import chain
 
+
+def chars_to_inference_data_set(char1, char2):
+    """
+    The handling of columns is getting a bit spread out..."""
+    pass
+
+
 class BattleDataGeneration:
     """Choosing an ideal weapon or attack can depend on a number of factors:
      dexterity score vs strength score
@@ -68,7 +75,7 @@ class BattleDataGeneration:
         """generate array with attributes:
         character 1: strength, dexterity, constitution, intelligence, wisdom, charisma, initiative bonus, initial_hitpoints, max_hitpoints,
                      weapon used, final remaining effective hitpoints
-        character 2: strength, dexterity
+        character 2: strength, dexterity...
         """
         ch1 = self.generate_random_character()
         stats1 = ch1.get_combat_stats()
