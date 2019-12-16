@@ -19,7 +19,9 @@ def get_normalization_coefficents(srcdf):
 def get_simple_vars(srcdf, normalization_coefficients):
     xvars = srcdf[["char1_strength", "char2_strength"]]
 
-
+def chars_to_input_data(dta):
+    pass
+    
 def get_machine_learning_optimized_df(srcdf, normalization_coefficients=None):
     # Need also to know what the divisors are for the items
     r1 = pd.get_dummies(srcdf['char1_race'], prefix="char1")

@@ -8,10 +8,7 @@ from random import *
 from itertools import chain
 
 
-def chars_to_inference_data_set(char1, char2):
-    """
-    The handling of columns is getting a bit spread out..."""
-    pass
+
 
 
 class BattleDataGeneration:
