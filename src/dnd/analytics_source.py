@@ -6,7 +6,7 @@
 from dnd.util import *
 from random import *
 from itertools import chain
-
+from dnd.combat import battle
 
 
 
@@ -44,29 +44,6 @@ class BattleDataGeneration:
         res.add_weapon_to_inventory(weapon)
         return res
 
-    def determine_winner(self, char1, char2, initiative_order):
-        if initiative_order == 1:
-            ch1 = char1
-            ch2 = char2
-        elif initiative_order == 2:
-            ch1 = char2
-            ch2 = char1
-        else:
-            raise Exception("Bad initiative order")
-        while ch1.is_conscious() and ch2.is_conscious():
-            if ch1.is_conscious():
-                a1 = ch1.weapons[0].get_attack(ch1, ch2)
-                if a1:
-                    ch2.defend_against_attack(a1)
-            if ch2.is_conscious():
-                a2 = ch2.weapons[0].get_attack(ch2, ch1)
-                if a2:
-                    ch1.defend_against_attack(a2)
-        if char1.is_conscious():
-            return (1, char1.effective_hit_points())
-        else:
-            return (2, char2.effective_hit_points())
-
 
     def battle_data_1(self):
         """generate array with attributes:
@@ -78,16 +55,7 @@ class BattleDataGeneration:
         stats1 = ch1.get_combat_stats()
         ch2 = self.generate_random_character()
         stats2 = ch2.get_combat_stats()
-        initiative_1 = 0
-        initiative_2 = 0
-        while initiative_1 == initiative_2:
-            initiative_1 = rollndx(1,20) + ch1.initiative_bonus()
-            initiative_2 = rollndx(1,20) + ch2.initiative_bonus()
-        if initiative_1 > initiative_2:
-            initiative_order = 1
-        else:
-            initiative_order = 2
-        res = self.determine_winner(ch1, ch2, initiative_order)
+        res = battle(ch1, ch2) #Returns winner index (1 or 2) , number of hitpoints remaining for winner
         ch1_won = res[0] == 1
         if ch1_won:
             ch1_hp = res[1]
@@ -98,22 +66,32 @@ class BattleDataGeneration:
             ch1_hp = 0
             ch2_hp = res[1]
 
-        record = stats1 + [ch1_won, ch1_hp] + stats2 + [ch2_won, ch2_hp]
-        return record
+        dta = stats1 + stats2
+        battle_dta = [ch1_won, ch1_hp] + [ch2_won, ch2_hp]
+        return dta, battle_dta
 
     def run_battle_data_1(self, count):
+        """Usage note - https://stackoverflow.com/questions/12974474/how-to-unzip-a-list-of-tuples-into-individual-lists
+        use zip(*res) to unzip these"""
         for btl in range(count):
-            yield self.battle_data_1()
+            x, y =  self.battle_data_1()
+            yield (x,y)
     
-    def show_headings(self):
-        h1 = ("char1_" + h for h in Character.get_combat_stat_columns() + ("won", "hp_left"))
-        h2 = ("char2_" + h for h in Character.get_combat_stat_columns() + ("won", "hp_left"))
-        return tuple(chain(h1,h2))
-        
+    def get_headings(self):
+        """This has a list of the columns that have useful data for the learning and inference processes
+        """
+        h1 = ("char1_" + h for h in Character.get_combat_stat_columns() )
+        h2 = ("char2_" + h for h in Character.get_combat_stat_columns() )
+        j1 = ("char1_" + j for j in ("won", "hp_left"))
+        j2 = ("char2_" + j for j in ("won", "hp_left"))
+        x_vars = tuple(chain(h1,h2))
+        y_vars = tuple(chain(j1, j2))
+        return x_vars, y_vars
 
 
 if __name__ == "__main__":
     datagen = BattleDataGeneration()
-    print(",".join(datagen.show_headings()))
-    for rec in datagen.run_battle_data_1(10):
-        print(",".join(str(r) for r in rec))
+    x_headings, y_headings = datagen.get_headings()
+    print(",".join(x_headings + y_headings))
+    for rec, battle_rec in datagen.run_battle_data_1(10):
+        print(",".join(str(r) for r in rec+battle_rec))

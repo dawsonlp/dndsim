@@ -3,7 +3,7 @@ import munch
 from math import floor
 import random
 import uuid
-
+import copy
 
 __hit_bonus_for_size__ = {"medium": 0, "small": 1, "tiny": 2, "diminutive": 4, "fine": 8,
                           "large": -1, "huge": -2, "gargantuan": -4, "colassal": -8}
@@ -219,6 +219,8 @@ class Character(object):
 
     @staticmethod
     def get_combat_stat_columns():
+        """These are the columns that have useful infomration about characters
+        They are need to match the combat stats"""
         return ("race", "base_strength", "base_dexterity", "base_constitution",
                 "base_intelligence", "base_wisdom", "base_charisma",
                 "strength", "dexterity", "constitution",
@@ -260,22 +262,15 @@ class Character(object):
         return max(res, -10)
 
     def __str__(self):
-        return """****************************
-Strength: {strength}
-Dexterity: {dexterity}
-Constitution: {constitution}
-Intelligence: {intelligence}
-Wisdom: {wisdom}
-Charisma: {charisma}
-Effective hit points: {hitpoints}
-""".format(strength = self.strength,
-                               dexterity=self.dexterity,
-                               constitution = self.constitution,
-                               intelligence = self.intelligence,
-                               wisdom = self.wisdom,
-                               charisma = self.charisma,
-                               hitpoints = self.effective_hit_points())
-
+        return f"""****************************
+Strength: {self.strength}
+Dexterity: {self.dexterity}
+Constitution: {self.constitution}
+Intelligence: {self.intelligence}
+Wisdom: {self.wisdom}
+Charisma: {self.charisma}
+Effective hit points: {self.effective_hit_points()}
+"""
     def apply_damage_reduction(self, damage):
         #not implemented properly yet - just sum all the attack components
         return sum(dmg for attack_type, dmg in damage)
