@@ -88,22 +88,22 @@ def show_single_random_fight_and_compare_percentage_chance_vs_neural_net(trained
     return {"simulation": results[0],"model": neural_result[0][0]}
 
 
-def create_model():
+
+def build_model_1():
     """The level of complexity on these layers doesn't seem to have improved much over a 2 layer network,
     However I'm not sure how accurate the simulation numbers are - I have to see how stable they are for
-    two give characters"""
+    two give characters
+    This model estimates a probability that exceeds 1 :-( 
+    I need to work out how to build in a softmax layer"""
     model = tf.keras.models.Sequential([
         tf.keras.layers.Input(shape=(40,)),
         tf.keras.layers.Dense(20, activation='sigmoid'),
         tf.keras.layers.Dense(5, activation='sigmoid'),
-        tf.keras.layers.Dense(5, activation='sigmoid'),
-
         tf.keras.layers.Dense(1, activation='sigmoid')])
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
+   
 
-
-    
 
 
 def full_test():
