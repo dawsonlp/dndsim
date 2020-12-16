@@ -50,6 +50,7 @@ class BattleDataGeneration:
         character 1: strength, dexterity, constitution, intelligence, wisdom, charisma, initiative bonus, initial_hitpoints, max_hitpoints,
                      weapon used, final remaining effective hitpoints
         character 2: strength, dexterity...
+        results (y values): char1_won, char1_remaininghp, char2_won, char2_remaininghp
         """
         ch1 = self.generate_random_character()
         stats1 = ch1.get_combat_stats()

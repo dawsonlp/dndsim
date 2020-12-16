@@ -21,12 +21,6 @@ def get_normalization_coefficents(srcdf):
     return srcdf.min(), srcdf.max()
 
 
-def get_simple_vars(srcdf, normalization_coefficients):
-    xvars = srcdf[["char1_strength", "char2_strength"]]
-
-def chars_to_input_data(dta):
-    pass
-
 
 def get_independent_vars(srcdf, scaler=None):
     def encode_onehot(column, categories, prefix):
@@ -105,9 +99,11 @@ def create_model():
         tf.keras.layers.Dense(5, activation='sigmoid'),
 
         tf.keras.layers.Dense(1, activation='sigmoid')])
-
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     return model
+
+
+    
 
 
 def full_test():
