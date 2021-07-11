@@ -109,23 +109,26 @@ def get_source_data(scaler, batch_size=10000):
     y_df = battle_result_data(charlist1, charlist2)
     return charlist1, charlist2, x_df, y_df
 
-def test_softmax():
+def test_linear_output(rows_per_batch=10000, batches=10, epochs = 20, rows_of_test_data = 100, simulation_iterations=1000):
+    pass
+
+def test_softmax(rows_per_batch=10000, batches=10, epochs = 20, rows_of_test_data = 100, simulation_iterations=1000):
     def train_iteration(scaler, model):
-        charlist1, charlist2, x_df, y_df = get_source_data(scaler, 10000)
+        charlist1, charlist2, x_df, y_df = get_source_data(scaler, rows_per_batch)
         y = y_df[["char1_won", "char2_won"]]
-        model.fit(x_df.to_numpy(), y.to_numpy(), epochs=20)
+        model.fit(x_df.to_numpy(), y.to_numpy(), epochs=epochs)
 
     model = build_softmax_model()
 
     scaler = get_single_character_scaler()
-    for i in range(4):
+    for i in range(batches):
         train_iteration(scaler, model)
         print(model.history)
 
-    testcharlist1, testcharlist2, test_x, test_y = get_source_data(scaler, 100)
+    testcharlist1, testcharlist2, test_x, test_y = get_source_data(scaler, rows_of_test_data)
     test_y_model = model.predict(test_x.to_numpy())
 
-    sim_result = [get_win_probability_from_simulation(ch1, ch2, 1000) for ch1, ch2 in zip(testcharlist1, testcharlist2)]
+    sim_result = [get_win_probability_from_simulation(ch1, ch2, simulation_iterations) for ch1, ch2 in zip(testcharlist1, testcharlist2)]
     result = pd.concat([ pd.DataFrame(test_y_model), pd.DataFrame(sim_result), pd.DataFrame(test_y),], axis=1)
 
     result.columns=[ "model_pct_chance_for_char1", "model_pct_chance_for_char2", "sim_pct_chance_for_char1", "sim_pct_chance_for_char2", "char1_won", "char2_won", "winner", "remaining_hp",]
