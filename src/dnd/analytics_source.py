@@ -29,8 +29,7 @@ class BattleDataGeneration:
     on low level characters."""
 
     def __init__(self):
-        self.weapons = [MediumLongsword35(), WarHammer35(), Falchion35(),
-                        BastardSword35(), Scimitar35()]
+        self.weapons = weapons35
 
     def generate_random_character(self):
         base = gen_character()
@@ -45,7 +44,7 @@ class BattleDataGeneration:
         return res
 
 
-    def battle_data_1(self):
+    def battle_data_1(self, scaler):
         """generate array with attributes:
         character 1: strength, dexterity, constitution, intelligence, wisdom, charisma, initiative bonus, initial_hitpoints, max_hitpoints,
                      weapon used, final remaining effective hitpoints
@@ -77,7 +76,8 @@ class BattleDataGeneration:
         for btl in range(count):
             x, y =  self.battle_data_1()
             yield (x,y)
-    
+
+
     def get_headings(self):
         """This has a list of the columns that have useful data for the learning and inference processes
         """

@@ -23,6 +23,8 @@ def get_normalization_coefficents(srcdf):
 
 
 def get_independent_vars(srcdf, scaler=None):
+
+
     def encode_onehot(column, categories, prefix):
         encoder = OneHotEncoder(categories=[categories], sparse=False)
         cols = [f"{prefix}_is_{category}" for category in categories]
@@ -32,7 +34,7 @@ def get_independent_vars(srcdf, scaler=None):
     weapontypes=[w.weapon_type for w in BattleDataGeneration().weapons] #Yuck
 
     r1 = encode_onehot(srcdf[['char1_race']],categories=["Human", "HalfOrc"], prefix="char1")
-    r2 = encode_onehot(srcdf[['char1_race']],categories=["Human", "HalfOrc"], prefix="char2")
+    r2 = encode_onehot(srcdf[['char2_race']],categories=["Human", "HalfOrc"], prefix="char2")
     w1 = encode_onehot(srcdf[['char1_weapon_type']], categories=weapontypes, prefix="char1")
     w2 = encode_onehot(srcdf[["char2_weapon_type"]], categories=weapontypes, prefix="char2")
     xdf = srcdf.drop(columns=[
@@ -44,6 +46,13 @@ def get_independent_vars(srcdf, scaler=None):
                               'char2_intelligence', 'char2_wisdom', 'char2_charisma'
                               ])
     #Really need to scale the variables here!
+    #However, for symmetry, the same scaling should be applied to both characters! Need to do one at a time
+    #And then add the two - but this is structured poorly for this right now.
+
+    # Idea: provide a character generator, a scaler and a character encoder and decoder, and a battle combiner separetly:
+    # Then
+    # so need a get_independent_vars variant for just a single character
+
     if scaler == None:
         scaler = StandardScaler()
         scaler.fit(xdf)
@@ -70,6 +79,8 @@ def get_datum(char1, char2, scaler):
     df = pd.DataFrame(data = [dta_x], columns = cols_x)
     res, scaler = get_independent_vars(df, scaler)
     return res
+
+def get_single_character_datum(char1, scaler):
 
 
 def show_single_random_fight_and_compare_percentage_chance_vs_neural_net(trained_model, scaler):

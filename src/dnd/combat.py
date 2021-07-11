@@ -2,17 +2,21 @@ from dnd.util import HumanCharacter, HalfOrcCharacter, MediumLongsword35, gen_ch
 import pandas as pd
 import copy
 
-def battle(ch1, ch2):
-    """res[0] says if 1 or 2 won, res[1] has number of hitpoints remaining"""
+
+def get_initiative_order(ch1, ch2):
     initiative_1 = 0
     initiative_2 = 0
     while initiative_1 == initiative_2:
         initiative_1 = rollndx(1, 20) + ch1.initiative_bonus()
         initiative_2 = rollndx(1, 20) + ch2.initiative_bonus()
     if initiative_1 > initiative_2:
-        initiative_order = 1
-    else:
-        initiative_order = 2
+        return 1
+    return 2
+
+
+def battle(ch1, ch2):
+    """res[0] says if 1 or 2 won, res[1] has number of hitpoints remaining"""
+    initiative_order= get_initiative_order(ch1, ch2)
     res = determine_winner(ch1, ch2, initiative_order)
     ch1_won = res[0] == 1
     if ch1_won:
@@ -53,10 +57,10 @@ def get_win_probability_from_simulation(ch1, ch2, trials=10000):
     To test should run multiple bouts between a and b and see how that
     compares to the output of the final layer"""
 
-    def trial(ch1, ch2):
-        char1 = copy.deepcopy(ch1)
-        char2 = copy.deepcopy(ch2)
-        res = battle(char1, char2)
+    def trial(c1, c2):
+        char_1 = copy.deepcopy(c1)
+        char_2 = copy.deepcopy(c2)
+        res = battle(char_1, char_2)
         if res[0] == 1:
             return (1, 0)
         else:

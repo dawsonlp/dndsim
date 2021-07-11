@@ -1,0 +1,12 @@
+numpy
+pandas
+matplotlib
+docopt
+python-dotenv
+tensorflow
+scikit-learn
+psycopg2-binary
+sqlalchemy
+falcon
+jupyterlab
+munch

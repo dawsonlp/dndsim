@@ -8,6 +8,8 @@ import copy
 __hit_bonus_for_size__ = {"medium": 0, "small": 1, "tiny": 2, "diminutive": 4, "fine": 8,
                           "large": -1, "huge": -2, "gargantuan": -4, "colassal": -8}
 
+
+
 def hit_bonus_for_size(size):
     if size in __hit_bonus_for_size__:
         return __hit_bonus_for_size__[size]
@@ -190,7 +192,15 @@ def set_max_hitpoints(character, new_max, adjust_current_hitpoints = True):
     character.max_hit_points = new_max
     if adjust_current_hitpoints:
         character.hit_points = character.hit_points + diff
-    
+
+class CharacterScaler(object):
+    def __init__(self, scaler):
+        self.scaler = scaler
+
+    def get_scaled_stats(self, characters_df):
+        return self.scaler.scale(characters_df)
+
+
 class Character(object):
 
 
@@ -219,7 +229,7 @@ class Character(object):
 
     @staticmethod
     def get_combat_stat_columns():
-        """These are the columns that have useful infomration about characters
+        """These are the columns that have useful information about characters
         They are need to match the combat stats"""
         return ("race", "base_strength", "base_dexterity", "base_constitution",
                 "base_intelligence", "base_wisdom", "base_charisma",
@@ -233,6 +243,7 @@ class Character(object):
                 self.strength, self.dexterity, self.constitution, self.intelligence, self.wisdom, self.charisma,
                 self.weapons[0].weapon_type, self.weapons[0].critical, self.weapons[0].critical_damage_multiplier,
                 self.initiative_bonus(), self.hit_points, self.max_hit_points, self.effective_hit_points(), self.effective_armor_class()]
+
 
     def effective_armor_class(self):
         """10 + armor bonus + shield bonus + Dexterity modifier + size modifier"""
@@ -360,6 +371,12 @@ def probability_of_win(char1, char2, model):
     #first make a dataset with full set of columns in it
     dataset = ()
 
+
+weapons35 = [MediumLongsword35(), WarHammer35(), Falchion35(),
+                        BastardSword35(), Scimitar35()]
+
+weapon_types_35 = [w.weapon_type for w in weapons35]
+races=["Human", "HalfOrc"]
 
 if __name__=="__main__":
 
